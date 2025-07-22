@@ -2,25 +2,28 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function Signup() {
-    const [form, setForm] = useState({ username: "", email: "", password: "" });
+const Signup = () => {
+    const [form, setForm] = useState({ email: "", password: "" });
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
+    // console.log(form, "...form");
 
     const handleSignup = async (e) => {
         e.preventDefault();
         setError("");
 
         try {
-            const res = await axios.post("https://api.realworld.io/api/users", {
-                user: form,
-            });
+            const res = await axios.post("http://localhost:5001/api/auth/signup", form);
+            // console.log(res, "...res")
+            alert(res.statusText, "User created successfully !!")
+            navigate('/login')
+            setForm({ email: "", password: "" })
 
-            const token = res.data.user.token;
-            localStorage.setItem("token", token);
-            navigate("/dashboard");
         } catch (err) {
-            setError("Signup failed");
+            // console.log(err, "...error");
+            alert(err.response.data.msg, "......Error")
+            setError(err.response.data.msg, "Signup failed");
         }
     };
 
@@ -28,13 +31,14 @@ export default function Signup() {
         <div className="p-6 max-w-md mx-auto">
             <h2 className="text-xl font-bold mb-4">Sign Up</h2>
             {error && <p className="text-red-500">{error}</p>}
+
             <form onSubmit={handleSignup}>
-                <input
+                {/* <input
                     className="border p-2 w-full mb-2"
                     placeholder="Username"
                     value={form.username}
                     onChange={(e) => setForm({ ...form, username: e.target.value })}
-                />
+                /> */}
                 <input
                     className="border p-2 w-full mb-2"
                     placeholder="Email"
@@ -48,6 +52,7 @@ export default function Signup() {
                     value={form.password}
                     onChange={(e) => setForm({ ...form, password: e.target.value })}
                 />
+
                 <button className="bg-green-600 text-white px-4 py-2" type="submit">
                     Sign Up
                 </button>
@@ -55,4 +60,5 @@ export default function Signup() {
         </div>
     );
 }
+export default Signup;
 

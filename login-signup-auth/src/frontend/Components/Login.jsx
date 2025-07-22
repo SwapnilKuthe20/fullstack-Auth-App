@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faInstagram, faWhatsapp, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
 
 
 const Login = () => {
@@ -11,8 +13,9 @@ const Login = () => {
         email: "",
         password: ""
     })
+    // console.log(formData, "...formData");
 
-    console.log(formData, "...formData");
+    const navigate = useNavigate();
 
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -23,8 +26,23 @@ const Login = () => {
         }))
     }
 
-    const handleLoginForm = (e) => {
+    //  For storing token into localStorage ::
+    const handleLoginForm = async (e) => {
         e.preventDefault();
+
+        try {
+            const resp = await axios.post("http://localhost:5001/api/auth/login", formData)
+            console.log(resp, "...Response")
+
+            localStorage.setItem("access_token", resp.data.accessToken)
+            localStorage.setItem("refresh_token", resp.data.refreshToken)
+
+            setFormData({ email: "", password: "" })
+            navigate('/dashboard')
+        } catch (err) {
+            alert(err.response.data.msg, "...Errro");
+        }
+
     }
 
     return (
