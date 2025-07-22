@@ -26,16 +26,34 @@ const Login = () => {
         }))
     }
 
-    //  For storing token into localStorage ::
+    // //  For storing token into localStorage ::
+    // const handleLoginForm = async (e) => {
+    //     e.preventDefault();
+
+    //     try {
+    //         const resp = await axios.post("http://localhost:5001/api/auth/login", formData)
+    //         // console.log(resp, "...Response")
+    //         localStorage.setItem("access_token", resp.data.accessToken)
+    //         // localStorage.setItem("refresh_token", resp.data.refreshToken)
+    //         setFormData({ email: "", password: "" })
+    //         navigate('/dashboard')
+    //     } catch (err) {
+    //         alert(err.response.data.msg, "...Errro");
+    //     }
+    // }
+
+    //  For storing refresh token into cookie ::
     const handleLoginForm = async (e) => {
         e.preventDefault();
 
         try {
-            const resp = await axios.post("http://localhost:5001/api/auth/login", formData)
-            console.log(resp, "...Response")
+            const resp = await axios.post("http://localhost:5001/api/auth/login", formData, {
+                withCredentials: true,          //  ✅ Required --> refresh token cookie m show krne k liye
+            })
+            // console.log(resp, "...Response")
 
             localStorage.setItem("access_token", resp.data.accessToken)
-            localStorage.setItem("refresh_token", resp.data.refreshToken)
+            // localStorage.setItem("refresh_token", resp.data.refreshToken)
 
             setFormData({ email: "", password: "" })
             navigate('/dashboard')
