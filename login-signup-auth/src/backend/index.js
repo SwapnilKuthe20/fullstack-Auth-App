@@ -25,7 +25,7 @@ mongoose
     .catch((err) => console.error("MongoDB error", err));
 
 
-console.log(process.env.MONGO_URI, ".env")
+// console.log(process.env.MONGO_URI, ".env")
 
 
 
