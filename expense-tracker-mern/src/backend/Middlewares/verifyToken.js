@@ -6,7 +6,7 @@ const verifyToken  = (req, res, next) => {
     try {
 
         const authHeader = req.headers['authorization']
-        // console.log(Authorization, ".....Authorization");
+        // console.log(authHeader, ".....Authorization");
 
         if (!authHeader) {
             return res.status(403).json({ message: "Unauthorizes, JWT token is required !", success: false })

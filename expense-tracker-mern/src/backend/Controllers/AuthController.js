@@ -7,7 +7,7 @@ const userModel = require('../Models/User')
 // toh wo ek JavaScript class ban jata hai jisme bahut saare built-in methods hote hain.
 
 const signup = async (req, res) => {
-    console.log("🛡️ Signup route hit", req.method, req.url);
+    // console.log("🛡️ Signup route hit", req.method, req.url);
     try {
         const { name, email, password } = req.body;
         const existingUser = await userModel.findOne({ email })

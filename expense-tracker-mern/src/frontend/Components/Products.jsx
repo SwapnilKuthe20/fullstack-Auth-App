@@ -10,11 +10,8 @@ const Products = () => {
     console.log(products);
 
 
-    const token = localStorage.getItem("accessToken");
-    // console.log(token, "...token");
-
     useEffect(() => {
-        api.get(`/products`)
+        api.get('/products')
             .then((res) => {
                 console.log(res, "res products.....");
                 toast.success("Products api success")

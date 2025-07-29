@@ -115,7 +115,7 @@ api.interceptors.response.use(
                 // withCredentials: true manually pass karna padta hai — 
                 // taaki browser server ko refresh token wali cookie bhej sake.
 
-                const res = await axios.post("/auth/refreshToken", {}, {
+                const res = await api.post("/auth/refreshToken", {}, {
                     withCredentials: true,      // // allow sending cookies (for refresh token)
                 });
 
