@@ -40,7 +40,8 @@ const signup = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    console.log("🔐 Login route hit", req.method, req.url);
+    // console.log("🔐 Login route hit", req.method, req.url);
+
     try {
         const { email, password } = req.body;
         const user = await userModel.findOne({ email });
@@ -68,11 +69,25 @@ const login = async (req, res) => {
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRE }
         )
 
+        // 🔧 Syntax of res.cookie()
+        //     res.cookie(name, value, options)
+
+        res.cookie('refreshToken', refresh_token, {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'strict',
+            // path: '/auth/refresh-token',
+            maxAge: 7 * 24 * 60 * 60 * 1000         // 7 days
+        })
+
+        // 7 days × 24 hours × 60 minutes × 60 seconds × 1000 milliseconds     // ✅ 1 second = 1000 milliseconds
+        //     = 604800000 milliseconds
+
+
         return res.status(200).json({
             success: true,
             message: "LoginSuceessfully !",
             access_token,
-            refresh_token,
             user: {
                 name: user.name,
                 email: user.email
@@ -85,4 +100,32 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { signup, login };
+//    Verify refresh token
+
+const refreshToken = async (req, res) => {
+    try {
+        // console.log(req.cookies, "..req.cookies");
+
+        const token = req.cookies.refreshToken;
+
+        if (!token) {
+            return res.status(400).json({ message: "Refresh token missing", success: false })
+        }
+        const payload = jsonWebToken.verify(token, process.env.REFRESH_TOKEN_SECRET)    // Returns Decoded payload
+        // payload ==> Decoded payload hota h
+
+
+        // Create new access token
+        const newAccessToken = jsonWebToken.sign(
+            { userId: payload.userId, email: payload.email },
+            process.env.JWT_SECRET,
+            { expiresIn: process.env.JWT_EXPIRES_IN }
+        )
+
+        return res.status(200).json({ access_token: newAccessToken })
+    } catch (err) {
+        return res.status(403).json({ message: "Invalid refresh token" })
+    }
+}
+
+module.exports = { signup, login, refreshToken };

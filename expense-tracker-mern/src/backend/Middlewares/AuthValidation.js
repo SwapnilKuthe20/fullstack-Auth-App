@@ -9,8 +9,10 @@ const signupValidation = (req, res, next) => {
     })
 
     const { error } = schema.validate(req.body)
+    console.log(error, "...error logValidation");
+
     if (error) {
-        return res.status(400).json({ message: "bad request", error })
+        return res.status(400).json({ message: error.details[0], success: false })
     }
     next();
 }
@@ -24,7 +26,7 @@ const loginValidation = (req, res, next) => {
     const { error } = schema.validate(req.body);
 
     if (error) {
-        return res.status(400).json({ message: "BAD REQUEST", error })
+        return res.status(400).json({ message: error.details[0], error })
     }
     next();
 }
