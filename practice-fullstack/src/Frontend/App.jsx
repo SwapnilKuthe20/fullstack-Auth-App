@@ -5,16 +5,18 @@ import SignUp from './Componants/SignUp'
 import Home from './Componants/Home'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
+import Products from './Componants/Products'
 
 function App() {
 
   return (
-    <>
+    <div className='bg-black h-screen'>
       <Routes>
         <Route path='/' element={<Navigate to={'/login'} />} />
         <Route path='/home' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path='/products' element={<Products />} />
       </Routes>
 
       <ToastContainer
@@ -27,7 +29,7 @@ function App() {
         draggable
         theme="colored"         // or "dark" / "colored"
       />
-    </>
+    </div>
   )
 }
 

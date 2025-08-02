@@ -9,17 +9,21 @@ const verifyToken = (req, res, next) => {
         // console.log(authHeader, ".....Authorization");
 
         if (!authHeader) {
-            return res.status(403).json({ message: "Unauthorizes, JWT token is required !", success: false })
+            return res.status(403).json({ message: "Unauthorized, JWT token is required !", success: false })
         }
 
         // Token should be like "Bearer xyz123", so split it
         const token = authHeader.split(' ')[1]
 
+        // console.log(token, "...token");
+
         if (!token) {
             return res.status(403).json({ message: "Unauthorized, token not found!", success: false })
         }
 
-        const decode = jwt.verify(token, process.env.JWT_SECRET)
+        const decode = jwt.verify(token, process.env.ACCESS_TOKEN)
+        // console.log(decode, "...decode");
+
         req.user = decode
 
         next()

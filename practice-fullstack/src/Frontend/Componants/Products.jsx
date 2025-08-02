@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api from '../Api/axios';
 import axios from 'axios';
 import { baseUrl } from './BaseUrl/BaseUrl';
 
@@ -9,19 +8,21 @@ import { baseUrl } from './BaseUrl/BaseUrl';
 const Products = () => {
     const [products, setProducts] = useState([]);
 
-    console.log(products);
-
+    const token = localStorage.getItem('accessToken')
 
     useEffect(() => {
-        axios.get(`${baseUrl}/api/products`)
+        axios.get(`${baseUrl}/api/products`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
             .then((res) => {
-                console.log(res, "res products.....");
+                // console.log(res, "res products.....");
                 toast.success("Products api success")
 
                 setProducts(res.data)
             }).catch((err) => {
-                console.log(err, "erroe...");
-
+                // console.log(err, "erroe...");
                 toast.error(err.response.data.message)
             })
 

@@ -1,3 +1,4 @@
+const { faL } = require("@fortawesome/free-solid-svg-icons");
 const userModel = require("../Models/UserModel");
 const bcrypt = require('bcrypt');
 const jsonWebToken = require('jsonwebtoken');
@@ -10,7 +11,7 @@ const signup = async (req, res) => {
         const existUser = await userModel.findOne({ email });
         // console.log(existUser, "...userExist Signup");
         if (existUser) {
-            res.status(400).json({ message: "Email already registered !!", success: false })
+            return res.status(400).json({ message: "Email already registered !!", success: false })
         }
 
         const hashesPass = await bcrypt.hash(password, 10);     //bcrypt.hash() is an asynchronous function
@@ -22,7 +23,7 @@ const signup = async (req, res) => {
         return res.status(201).json({ message: "User Signup Successfully !!", success: true })
 
     } catch (err) {
-        console.error("Signup Error:", err);
+        // console.error("Signup Error:", err);
         return res.status(500).json({ message: "Something Went Wrong !", success: false })
     }
 }
@@ -32,7 +33,7 @@ const login = async (req, res) => {
         const { email, password } = req.body;
 
         const userExist = await userModel.findOne({ email });
-        console.log(userExist, "...userExist");
+        // console.log(userExist, "...userExist");
 
         if (!userExist) {
             return res.status(400).json({ message: "Please enter valid Email or Password", success: false })
@@ -74,15 +75,32 @@ const login = async (req, res) => {
         })
 
     } catch (err) {
-        console.log(err, "err in login");
+        // console.log(err, "err in login");
 
         return res.status(500).json({ message: "Something Went Wrong !", success: false })
     }
 }
 
+
 const refreshToken = async (req, res) => {
     try {
-        console.log(req, "..req");
+        const refreshToken = req.cookies.refreshToken;
+        // console.log(authHeader, "...authHeader");
+
+        if (!refreshToken) {
+            return res.status(400).json({ message: "Headers missing ", success: false })
+        }
+
+        const decodedPayload = jsonWebToken.verify(refreshToken, process.env.REFRESH_TOKEN);
+        // console.log(decodedPayload, "...decodedPayload");
+
+        const newAccessToken = jsonWebToken.sign(
+            { userId: decodedPayload.userId, email: decodedPayload.email },
+            process.env.ACCESS_TOKEN,
+            { expiresIn: process.env.ACCESS_EXPIRE }
+        )
+
+        return res.status(200).json({ access_token: newAccessToken })
 
 
     } catch (err) {
@@ -93,7 +111,8 @@ const refreshToken = async (req, res) => {
 
 module.exports = {
     signup,
-    login
+    login,
+    refreshToken
 }
 
 

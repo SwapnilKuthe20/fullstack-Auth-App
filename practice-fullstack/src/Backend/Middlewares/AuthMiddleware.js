@@ -14,7 +14,7 @@ const signupMiddleware = (req, res, next) => {
         return res.status(400).json({ error: error.details[0].message, success: false })
     }
 
-    next()
+    next()      // next middleware ko call karta hai
 }
 
 const loginMiddleware = (req, res, next) => {
