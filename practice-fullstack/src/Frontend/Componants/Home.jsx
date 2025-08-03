@@ -13,6 +13,9 @@ const Home = () => {
     const handleSignUp = () => {
         navigate('/signup')
     }
+    const handleProduct = () => {
+        navigate('/products')
+    }
 
     return (
         <div>
@@ -20,6 +23,7 @@ const Home = () => {
 
             <button onClick={handleLogIn} className='bg-amber-500 p-2.5 rounded text-amber-100 m-2.5 cursor-pointer'> Login </button>
             <button onClick={handleSignUp} className='bg-amber-500 p-2.5 rounded text-amber-100 m-2.5 cursor-pointer'> Signup </button>
+            <button onClick={handleProduct} className='bg-amber-500 p-2.5 rounded text-amber-100 m-2.5 cursor-pointer'> Product Page </button>
         </div >
     );
 }

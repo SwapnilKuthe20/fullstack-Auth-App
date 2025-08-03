@@ -1,35 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import axios from 'axios';
-import { baseUrl } from './BaseUrl/BaseUrl';
+import API from './Api/axios';
 
 
 const Products = () => {
     const [products, setProducts] = useState([]);
 
-    const token = localStorage.getItem('accessToken')
+    const navigate = useNavigate()
 
     useEffect(() => {
-        axios.get(`${baseUrl}/api/products`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
+        API.get(`/api/products`)
             .then((res) => {
                 // console.log(res, "res products.....");
                 toast.success("Products api success")
 
                 setProducts(res.data)
             }).catch((err) => {
-                // console.log(err, "erroe...");
+                console.log(err, "erroe...");
                 toast.error(err.response.data.message)
             })
-
     }, [])
 
     const handleCart = () => {
 
+    }
+
+    const handleLogout = () => {
+        API.post('/api/auth/logout', {}, {
+            withCredentials: true
+        })
+            .then((res) => {
+                localStorage.removeItem('accessToken');
+                navigate('/home')
+                toast.success(res.data.message)
+
+            }).catch((err) => {
+                // console.log(err, "error logout !");
+                toast.error(err.code || "Logout Failed !!")
+            })
     }
 
     return (
@@ -46,11 +55,17 @@ const Products = () => {
                         )
                     })
                 }
-
-                <Link to={'./cart'}>
-                    <button onClick={handleCart}>Go to Cart</button>
-                </Link>
             </div >
+
+            <Link to={'./cart'}>
+                <button onClick={handleCart} className='text-amber-100 block m-auto'>Go to Cart</button>
+            </Link>
+
+            <button
+                onClick={handleLogout}
+                className='text-amber-100 block m-auto border-amber-600 p-2.5 bg-amber-500 rounded cursor-pointer'>
+                Logout
+            </button>
         </>
     );
 }

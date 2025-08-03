@@ -26,7 +26,7 @@ const loginMiddleware = (req, res, next) => {
 
     const { error } = Schema.validate(req.body);
 
-    console.log(error, "...Loginmiddleware");
+    // console.log(error, "...Loginmiddleware");
 
     if (error) {
         return res.status(400).json({ error: error.details[0].message, success: false })

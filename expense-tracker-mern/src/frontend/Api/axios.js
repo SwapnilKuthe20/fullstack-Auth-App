@@ -67,9 +67,16 @@ api.interceptors.response.use(
 
     // Agar request fail hoti hai (jaise 401 Unauthorized), 
     // to uska config (original request data) le lo, jise hum retry karenge.
+    // 🔄 Background:
+    //     Jab Axios me koi response error aata hai (jaise 401, 500 etc.), 
+    //     to interceptors.response.use() ka second function (error handler) call hota hai.
+    // ✅ async Kyun Lagate Hain?
+    //     ⚠️ Jab response interceptor me aap asynchronous kaam karna chahte ho 
+    //     (jaise axios.get(), await, token refresh, etc.) tab async lagana zaroori hota hai.
+    
     async (error) => {
         const originalRequest = error.config;
-
+        //➡️ "Jo request fail hui hai, usi ka config nikaal lo, taaki usko retry kar sakein."
         // originalRequest me wo purani request hoti hai jisme error aaya. Isse retry karna ho to isi ka use hoga
 
           // ❌ Error response (e.g. 401, 403, 500)

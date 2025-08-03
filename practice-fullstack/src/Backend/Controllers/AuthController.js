@@ -109,10 +109,27 @@ const refreshToken = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+
+    try {
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            sameSite: "strict",
+            secure: false
+        })
+
+        return res.status(200).json({ message: "logout Successfull", success: true })
+    } catch (err) {
+        console.error("Logout Error:", err);
+        return res.status(500).json({ message: "Something Went Error", success: false })
+    }
+}
+
 module.exports = {
     signup,
     login,
-    refreshToken
+    refreshToken,
+    logout
 }
 
 
