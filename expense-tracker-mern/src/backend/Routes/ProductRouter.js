@@ -1,8 +1,8 @@
 const express = require('express')
 const Router = express.Router()
-const verifyToken  = require('../Middlewares/verifyToken')
+const verifyToken = require('../Middlewares/verifyToken')
 
-Router.get('/', verifyToken , (req, res) => {
+Router.get('/', verifyToken, (req, res) => {
     return res.status(200).json([
 
         {

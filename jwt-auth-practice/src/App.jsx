@@ -18,7 +18,7 @@ function App() {
         <Route path='/products' element={<Products />} />
       </Routes>
 
-      <ToastContainer />
+      <ToastContainer theme='dark' />
     </div>
   )
 }

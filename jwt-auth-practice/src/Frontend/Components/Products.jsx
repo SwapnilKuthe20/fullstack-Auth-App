@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { baseURL } from './BaseUrl/baseURL';
+import { toast } from 'react-toastify';
 
 
 const Products = () => {
     const [products, setProducts] = useState([]);
 
+    const token = localStorage.getItem('accessToken')
+
+    useEffect(() => {
+        axios.get(`${baseURL}/products`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res) => {
+            console.log(res, "...res");
+
+        }).catch((err) => {
+            console.log(err, "...errorr");
+            // toast.error()
+        })
+    }, [])
 
     const handleCart = () => {
 

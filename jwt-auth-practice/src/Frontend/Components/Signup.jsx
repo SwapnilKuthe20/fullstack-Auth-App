@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from 'axios';
 import { baseURL } from "./BaseUrl/baseURL";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const Signup = () => {
 
@@ -9,6 +11,8 @@ const Signup = () => {
         email: "",
         password: ""
     })
+
+    const navigate = useNavigate()
 
     let payload = {
         userName: form.username,
@@ -24,9 +28,17 @@ const Signup = () => {
                 // console.log(res, "...res");
                 toast.success(res.data.message)
 
+                navigate('/login')
+
+                setForm({
+                    username: "",
+                    email: "",
+                    password: ""
+                })
+
             }).catch((err) => {
                 console.log(err, "...err");
-
+                toast.error(err.response.data.message)
             })
     }
 

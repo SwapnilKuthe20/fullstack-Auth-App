@@ -1,8 +1,9 @@
 const express = require('express');
-const { authRoute } = require('./Routes/AuthRoute');
+const authRoute = require('./Routes/AuthRoute');
 require('dotenv').config();
 require('./Models/db');
 const app = express();
+const productRoute = require('./Routes/ProductRoute')
 const cors = require('cors')
 
 
@@ -22,6 +23,7 @@ app.get('/home', (req, res) => {
 })
 
 app.use('/api/auth', authRoute)
+app.use('/products', productRoute)
 
 const Port = process.env.PORT
 

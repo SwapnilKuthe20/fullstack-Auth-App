@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faFacebookF, faInstagram, faWhatsapp, faTwitter } from '@fortawesome/free-brands-svg-icons';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { baseURL } from './BaseUrl/baseURL';
+import { toast } from 'react-toastify';
 
 const Login = () => {
 
@@ -11,6 +14,7 @@ const Login = () => {
         password: ""
     })
 
+    const navigate = useNavigate()
 
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -28,7 +32,23 @@ const Login = () => {
     const handleLoginForm = (e) => {
         e.preventDefault();
 
+        axios.post(`${baseURL}/api/auth/login`, payload, {
+            withCredentials: true
+        }).then((res) => {
+            console.log(res, "...res");
+            toast(res.data.message)
 
+            localStorage.setItem("accessToken", res.data.accessToken)
+            navigate('/home')
+            setFormData({
+                email: "",
+                password: ""
+            })
+
+        }).catch((err) => {
+            // console.log(err, "...err");
+            toast.error(err.response.data.message)
+        })
     }
 
 
