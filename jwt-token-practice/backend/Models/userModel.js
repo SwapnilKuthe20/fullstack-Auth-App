@@ -7,12 +7,25 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
-        required: true
+        required: function () {
+            // password tabhi required ho jab user Google login se nahi bana ho
+            return this.authType !== 'google';
+        }
     },
+    authType: {
+        type: String,
+        enum: ['local', 'google'], // future me aur providers add kar sakte ho
+        default: 'local'
+    },
+    picture: {
+        type: String, // Google profile pic URL
+        default: null
+    }
 }, { timestamps: true })
 
 const userModel = mongoose.model('User', userSchema)

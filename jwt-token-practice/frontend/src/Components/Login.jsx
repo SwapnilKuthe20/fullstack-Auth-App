@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import API from './axiosInterceptor/axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
 
@@ -60,6 +61,26 @@ const Login = () => {
             })
     }
 
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            const res = await API.post('/api/auth/google/callback', {
+                credential: credentialResponse.credential
+            }, {
+                withCredentials: true
+            })
+
+            toast.success(res.data.message)
+            localStorage.setItem("accessToken", res.data.accessToken);
+            navigate('/home', { replace: true });
+        } catch (err) {
+            toast.error(err.response?.data?.message || 'Google login failed');
+        }
+    }
+
+    const handleGoogleError = () => {
+        toast.error('Google login was unsuccessful');
+    }
+
     return (
         <div className="w-xl bg-emerald-950 text-white p-4 rounded-2xl">
             <h3 className="text-center text-4xl m-3"> Login Form </h3>
@@ -77,6 +98,12 @@ const Login = () => {
 
                 <button type="submit" className="w-1/2 bg-amber-400 m-auto block py-2 rounded-full cursor-pointer"> Submit </button>
             </form>
+            <div className=' w-1/2 m-auto mt-3 mb-3'>
+                <GoogleLogin
+                    onSuccess={handleGoogleLogin}
+                    onError={handleGoogleError}
+                />
+            </div>
         </div>
     );
 }
