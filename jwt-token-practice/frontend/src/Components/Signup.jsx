@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from './axiosInterceptor/axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,15 @@ const Signup = () => {
     // console.log(formData, "...formData");
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+
+        if (token) {
+            // already logged in, redirect user
+            navigate('/home', { replace: true });
+        }
+    }, []);
 
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -31,7 +40,7 @@ const Signup = () => {
                 console.log(res, "...signup res");
                 toast.success(res.data.message)
 
-                navigate('/login')
+                navigate('/login', { replace: true })
 
                 setFormData({
                     userName: "",

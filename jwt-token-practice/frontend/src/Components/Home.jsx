@@ -1,9 +1,28 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import API from "./axiosInterceptor/axios";
+import { toast } from "react-toastify";
 
 const Home = () => {
 
+    const navigate = useNavigate()
+
     const handleLogout = () => {
 
+        API.post('/api/auth/logout', {}, {
+            withCredentials: true
+        })
+            .then((res) => {
+                // console.log(res, "...res logout ");
+                toast.success(res.data.message)
+
+                localStorage.removeItem("accessToken")
+
+                navigate('/login')
+            })
+            .catch((err) => {
+                // console.log(err, "...error logout");
+                toast.error(err.response.data.message)
+            })
     }
 
     return (

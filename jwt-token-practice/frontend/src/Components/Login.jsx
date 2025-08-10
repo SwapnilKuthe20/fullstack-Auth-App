@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import API from './axiosInterceptor/axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -12,6 +12,19 @@ const Login = () => {
     // console.log(formData, "...formData");
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken')
+
+        if (token) {
+            navigate('/home', { replace: true })
+        }
+
+        //         🧠 replace: true ka kaam kya hai ?
+        //     replace : false(default ): Browser history me naya entry add hota hai
+        // replace: true: Current entry replace ho jaata hai(back button se pichla page nahi aata)
+
+    }, [])
 
     const handleInput = (e) => {
         const { name, value } = e.target;
@@ -34,7 +47,7 @@ const Login = () => {
 
                 localStorage.setItem("accessToken", res.data.accessToken)
 
-                navigate('/home')
+                navigate('/home', { replace: true })
 
                 setFormData({
                     email: "",

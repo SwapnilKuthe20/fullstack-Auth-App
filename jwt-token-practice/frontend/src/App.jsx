@@ -5,6 +5,10 @@ import Signup from './Components/Signup'
 import Home from './Components/Home'
 import Products from './Components/Products'
 import { ToastContainer } from 'react-toastify'
+import Dashboard from './Components/Dashboard'
+import WishList from './Components/WishList'
+import Cart from './Components/Cart'
+import ProtectedRoutes from './Components/ProtectedRoutes/ProtectedRoutes'
 
 function App() {
 
@@ -13,7 +17,10 @@ function App() {
     { id: 2, path: "/login", element: <Login /> },
     { id: 3, path: "/signup", element: <Signup /> },
     { id: 4, path: "/home", element: <Home /> },
-    { id: 5, path: "/products", element: <Products /> },
+    { id: 5, path: "/products", element: <ProtectedRoutes><Products /></ProtectedRoutes> },
+    { id: 6, path: "/dashboard", element: <ProtectedRoutes><Dashboard /></ProtectedRoutes> },
+    { id: 7, path: "/wishlist", element: <ProtectedRoutes> <WishList /></ProtectedRoutes> },
+    { id: 8, path: "/cart", element: <ProtectedRoutes><Cart /></ProtectedRoutes> },
   ]
 
   return (

@@ -69,7 +69,7 @@ const loginController = async (req, res) => {
         res.cookie('refreshToken', refresh_token, {
             httpOnly: true,
             secure: false,
-            sameSite: true,
+            sameSite: 'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000     // 7days
         })
 
@@ -124,9 +124,31 @@ const generateTokenController = async (req, res) => {
     }
 }
 
+const logoutController = async (req, res) => {
+    try {
+
+        const refreshToken = req.cookies.refreshToken
+        if (!refreshToken) {
+            return res.status(400).json({ message: 'Refresh token not found', success: false })
+        }
+
+        res.clearCookie('refreshToken', {
+            httpOnly: true,
+            sameSite: "strict",
+            secure: false
+        })
+
+        return res.status(200).json({ message: 'Logout successful', success: true });
+
+    } catch (err) {
+        return res.status(500).json({ message: 'Internal server error', success: false })
+    }
+}
+
 
 module.exports = {
     signupController,
     loginController,
-    generateTokenController
+    generateTokenController,
+    logoutController
 }
